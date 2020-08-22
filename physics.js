@@ -17,6 +17,22 @@ export function turnRight() {
 		theta += circle;
 	}
 }
+export function strafeLeft() {
+	let newX = play.x + Math.sin(theta) * moveSpeed;
+	let newY = play.y - Math.cos(theta) * moveSpeed;
+	if (blocks[Math.floor(newX)][Math.floor(newY)] === 0) {
+		play.x = newX;
+		play.y = newY;
+	}
+}
+export function strafeRight() {
+	let newX = play.x - Math.sin(theta) * moveSpeed;
+	let newY = play.y + Math.cos(theta) * moveSpeed;
+	if (blocks[Math.floor(newX)][Math.floor(newY)] === 0) {
+		play.x = newX;
+		play.y = newY;
+	}
+}
 export function moveForward() {
 	let newX = play.x + Math.cos(theta) * moveSpeed;
 	let newY = play.y + Math.sin(theta) * moveSpeed;

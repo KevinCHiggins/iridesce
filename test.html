@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<body>
+		<p>Answer:</p>
+		<p id="ans"></p>
+
+		<label for="playX">PlayX</label>	<br>
+	<input type="number" id="playX" name="playX"><br>
+		<label for="playY">PlayY</label><br>
+	<input type="number" id="playY" name="playY"><br>
+		<label for="hitX">HitX</label><br>
+	<input type="number" id="hitX" name="hitX"><br>
+		<label for="hitY">HitY</label><br>
+	<input type="number" id="hitY" name="hitY"><br>
+	<input type="checkbox" id="vert" value="vert" name="vert"><br>
+	<label for="ang">Angle in degrees</label><br>
+	<input type="number" id="ang" min ="0" max="359"><br>
+
+
+
+	<button id="calc">Calc</button>
+		<script> 
+const CIRC = Math.PI * 2;
+const HALF_CIRC = Math.PI;
+const QUART_CIRC = Math.PI / 2;
+
+const THREE_QUART_CIRC = HALF_CIRC + QUART_CIRC;
+			let but = document.getElementById('calc');
+			but.onclick = function() {
+				let point = {x: document.getElementById('hitX').value,
+				y: document.getElementById('hitY').value};
+
+				let play = {x: document.getElementById('playX').value,
+				y: document.getElementById('playY').value};
+				let par = document.getElementById('ans');
+				let isVert =  document.getElementById('vert').value === 'vert';
+				let hit = {hitPoint: point, vertEdge: document.getElementById('vert').checked};
+				let ang = document.getElementById('ang').value;
+				par.innerHTML = angOfInc(hit, play, ang);
+			}
+			function angOfInc(hit, play, ang) {
+				var inc;
+				ang = (ang / 180) * Math.PI;
+				console.log("Ang in radians " + ang);
+				console.log("Vert? " + hit.vertEdge);
+				if (hit.vertEdge) {
+					if (hit.hitPoint.x > play.x) {
+						if (ang > HALF_CIRC) {
+							inc = CIRC - ang;
+						}
+						else {
+							inc = ang;
+						}
+					}
+					else { // ray going in direction of decreasing x
+						if (ang > HALF_CIRC) {
+							inc = THREE_QUART_CIRC - ang;
+						}
+						else {
+							inc = ang - QUART_CIRC;
+						}
+					}
+				}
+				else {
+					if (hit.hitPoint.y > play.y) {
+						if (ang > QUART_CIRC) {
+							inc = ang - QUART_CIRC;
+						}
+						else {
+							inc = QUART_CIRC - ang;
+						}
+					}
+					else { // ray going in direction of decreasing y
+						if (ang > THREE_QUART_CIRC) {
+							inc = ang - THREE_QUART_CIRC;
+						}
+						else {
+							inc = THREE_QUART_CIRC - ang;
+						}
+					}
+				}
+				return inc;
+}
+		</script>
+	</body>
+</html>

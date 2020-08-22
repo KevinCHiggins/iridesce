@@ -2,6 +2,14 @@
 let Gamma = 0.80;
 let IntensityMax = 255;
 export function lightCol(wavelength) {
+    let rgb = lightColArray(wavelength);
+    return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2]+')';
+}
+export function lightColObj(wavelength) {
+    let rgb = lightColArray(wavelength);
+    return {red: rgb[0], green: rgb[1], blue: rgb[2]};
+}
+function lightColArray(wavelength) {
     let factor = 0.0;
     let Red = 0;
     let Green = 0;
@@ -57,5 +65,6 @@ export function lightCol(wavelength) {
     rgb[1] = Green == 0.0 ? 0 : Math.round(IntensityMax * Math.pow(Green * factor, Gamma));
     rgb[2] = Blue == 0.0 ? 0 : Math.round(IntensityMax * Math.pow(Blue * factor, Gamma));
 
-    return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2]+')';
+    return rgb;
 }
+

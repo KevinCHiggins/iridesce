@@ -1,15 +1,20 @@
 import {leftPressed} from "./control.js";
 import {rightPressed} from "./control.js";
+import {turnLeftPressed} from "./control.js";
+import {turnRightPressed} from "./control.js";
 import {upPressed} from "./control.js";
 import {downPressed} from "./control.js";
 import {turnLeft} from "./physics.js";
 import {turnRight} from "./physics.js";
+import {strafeLeft} from "./physics.js";
+import {strafeRight} from "./physics.js";
 import {moveForward} from "./physics.js";
 import {moveBack} from "./physics.js";
 import {render2D} from "./control.js";
 import {theta} from "./physics.js";
 import {play} from "./physics.js";
 import {lightCol} from "./wavelength.js";
+import {makeTextures} from "./display.js";
 import {display2D} from "./display.js";
 import {display3D} from "./display.js";
 import {Point} from "./point.js";
@@ -32,6 +37,8 @@ const VIEW_PLANE_INC = (2 * Math.tan(FOV / 2)) / WIDTH;
 c.style.width = WIDTH + "px";
 c.style.height = HEIGHT + "px";
 let ctx = c.getContext('2d');
+
+
 let viewAngs = getViewPlaneAngles();//getViewArcPoints(0, play).angs;//getViewPlaneAngles();
 function gameLoop() {
 	if (rightPressed && leftPressed) {
@@ -39,10 +46,23 @@ function gameLoop() {
 	}
 	else if (rightPressed) {
 		//console.log("R" + theta);
-		turnRight();
+		strafeRight();
 
 	}
 	else if (leftPressed) {
+		//console.log("L" + theta);
+		strafeLeft();
+
+	}
+	if (turnRightPressed && turnLeftPressed) {
+		//console.log("RL");
+	}
+	else if (turnRightPressed) {
+		//console.log("R" + theta);
+		turnRight();
+
+	}
+	else if (turnLeftPressed) {
 		//console.log("L" + theta);
 		turnLeft();
 
@@ -66,7 +86,17 @@ function gameLoop() {
 	}
 
 }
-setInterval(gameLoop, 10)
+let asset1 = document.getElementById('iridmap');
+let asset2 = document.getElementById('texture');
+let bodyElement = document.body;
+console.log("Body: " + bodyElement);
+bodyElement.onload = function() {
+
+	console.log("Loaded. Starting.");
+	makeTextures();
+	setInterval(gameLoop, 10)
+}
+
 // this is to get the angles of the projections to the points equally spaced on the view plane
 // these angles are used to calculate distance to intersections with right-angled walls
 // in display.js

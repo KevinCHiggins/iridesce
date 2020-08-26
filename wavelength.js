@@ -1,12 +1,32 @@
 // thanks to Tarc's answer here https://stackoverflow.com/questions/1472514/convert-light-frequency-to-rgb
 let Gamma = 0.80;
 let IntensityMax = 255;
+let arr = [];
+export function buildColArr() {
+    for (let i = 380; i <= 780; i++) {
+        arr.push(lightColArray(i));
+    }
+    //console.log("Colour look up table complete");
+   //console.log(arr[300][0]);
+}
+function table(wavelength) {
+   // console.log("Getting member " + (wavelength - 380));
+    if (wavelength < 380) {
+        return arr[0];
+    }
+    if (wavelength > 780) {
+        return arr[400];
+    }
+    return arr[wavelength - 380];
+    //return(lightColArray(wavelength)); // the old way, if you want to see how much slower it is than the lookup table
+}
 export function lightCol(wavelength) {
-    let rgb = lightColArray(wavelength);
+    let rgb = table(wavelength);
     return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2]+')';
 }
 export function lightColObj(wavelength) {
-    let rgb = lightColArray(wavelength);
+    //console.log("Getting colour " + wavelength);
+    let rgb = table(wavelength);
     return {red: rgb[0], green: rgb[1], blue: rgb[2]};
 }
 function lightColArray(wavelength) {

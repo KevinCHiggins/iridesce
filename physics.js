@@ -1,6 +1,6 @@
 import {Point} from "./point.js";
 export let theta = 0;
-export let play = new Point(1.5, 2.5);
+export let play = new Point(3.5,3.5);
 import {blocks} from "./buildmap.js";
 const moveSpeed = 0.1;
 const circle = Math.PI * 2;

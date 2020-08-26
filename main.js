@@ -11,9 +11,11 @@ import {strafeRight} from "./physics.js";
 import {moveForward} from "./physics.js";
 import {moveBack} from "./physics.js";
 import {render2D} from "./control.js";
+import {iridesce} from "./control.js";
 import {theta} from "./physics.js";
 import {play} from "./physics.js";
 import {lightCol} from "./wavelength.js";
+
 import {makeTextures} from "./display.js";
 import {display2D} from "./display.js";
 import {display3D} from "./display.js";
@@ -23,9 +25,9 @@ import {blocks} from "./buildmap.js";
 let c = document.getElementById("c");
 const WIDTH = 400;
 const HEIGHT = 300;
-const FOV= Math.PI / 2.5;
+const FOV= Math.PI / 2;
 
-const SCALE_2D = 20; // how big in pixels each block/unit should be in 2D view
+
 let lineOrig = new Point(0, 0);
 
 // find the distance between intersections of rays with a line 1 unit in front of the player, so that WIDTH rays fit in the fov
@@ -37,10 +39,12 @@ const VIEW_PLANE_INC = (2 * Math.tan(FOV / 2)) / WIDTH;
 c.style.width = WIDTH + "px";
 c.style.height = HEIGHT + "px";
 let ctx = c.getContext('2d');
-
+let previousTimestamp = 0;
 
 let viewAngs = getViewPlaneAngles();//getViewArcPoints(0, play).angs;//getViewPlaneAngles();
-function gameLoop() {
+function gameLoop(timestamp) {
+	console.log(timestamp - previousTimestamp);
+	previousTimestamp = timestamp;
 	if (rightPressed && leftPressed) {
 		//console.log("RL");
 	}
@@ -79,11 +83,12 @@ function gameLoop() {
 	let points = getViewPlanePoints(theta, play);//getViewArcPoints(theta, play).points;
 
 	if (render2D) {
-		display2D(ctx, points, blocks, SCALE_2D, play, theta, viewAngs);
+		display2D(ctx, points, blocks, play, theta, viewAngs);
 	}
 	else {
-		display3D(ctx, points, blocks, SCALE_2D, play, theta, viewAngs);
+		display3D(ctx, points, blocks, play, theta, viewAngs,  iridesce);
 	}
+	window.requestAnimationFrame(gameLoop)
 
 }
 let asset1 = document.getElementById('iridmap');
@@ -94,7 +99,7 @@ bodyElement.onload = function() {
 
 	console.log("Loaded. Starting.");
 	makeTextures();
-	setInterval(gameLoop, 10)
+	window.requestAnimationFrame(gameLoop)
 }
 
 // this is to get the angles of the projections to the points equally spaced on the view plane

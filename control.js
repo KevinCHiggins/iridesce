@@ -4,7 +4,8 @@ export let turnLeftPressed = false;
 export let turnRightPressed = false;
 export let upPressed = false;
 export let downPressed = false;
-export let render2D = true;
+export let render2D = false;
+export let iridesce = false;
 onkeydown = function d(evt) {
 
 	let code = evt.keyCode;
@@ -25,6 +26,13 @@ onkeydown = function d(evt) {
 	}
 	else if (code === 87) {
 		upPressed = true;
+	}
+	if (code === 88) {
+		render2D = !render2D;
+	}
+	if (code === 73) {
+		console.log("B")
+		iridesce = !iridesce;
 	}
 }
 onkeyup = function u(evt) {
@@ -47,9 +55,7 @@ onkeyup = function u(evt) {
 	else if (code === 83) {
 		downPressed = false;
 	}
-	if (code === 88) {
-		render2D = !render2D;
-	}
+
 }
 onkeypress = function p(evt) {
 	let code = evt.keyCode;

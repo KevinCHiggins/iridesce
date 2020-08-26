@@ -16,6 +16,7 @@ import {theta} from "./physics.js";
 import {play} from "./physics.js";
 import {lightCol} from "./wavelength.js";
 
+import {setup} from "./display.js";
 import {makeTextures} from "./display.js";
 import {display2D} from "./display.js";
 import {display3D} from "./display.js";
@@ -39,6 +40,7 @@ const VIEW_PLANE_INC = (2 * Math.tan(FOV / 2)) / WIDTH;
 c.style.width = WIDTH + "px";
 c.style.height = HEIGHT + "px";
 let ctx = c.getContext('2d');
+setup(ctx);
 let previousTimestamp = 0;
 
 let viewAngs = getViewPlaneAngles();//getViewArcPoints(0, play).angs;//getViewPlaneAngles();

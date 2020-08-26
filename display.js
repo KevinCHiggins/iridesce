@@ -11,9 +11,12 @@ const CIRC = Math.PI * 2;
 const HALF_CIRC = Math.PI;
 const QUART_CIRC = Math.PI / 2;
 const THREE_QUART_CIRC = HALF_CIRC + QUART_CIRC;
-
+var width;
+var height;
+var strip; // strip of graphics data 1px wide i.e. a buffer, used for drawing walls
 let offscreen = new OffscreenCanvas(TEX_SIDE * 2, TEX_SIDE * 2);
 let offscreenCtx = offscreen.getContext('2d');
+
 var tex; 
 var map;
 
@@ -32,13 +35,15 @@ export function makeTextures() {
 	offscreenCtx.drawImage(map, 0, 0);
 	mapData = offscreenCtx.getImageData(0, 0, TEX_SIDE, TEX_SIDE);
 
-
+}
+export function setup(ctx) {
+	width = ctx.canvas.style.width.substring(0, ctx.canvas.style.width.length - 2);
+	height = ctx.canvas.style.height.substring(0, ctx.canvas.style.height.length - 2);
+	strip = ctx.createImageData(1, height);
 }
 //offscreenCtx.drawImage(map, 64, 0);
 export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) {
 
-	let width = ctx.canvas.style.width.substring(0, ctx.canvas.style.width.length - 2);
-	let height = ctx.canvas.style.height.substring(0, ctx.canvas.style.height.length - 2);
 	let colScale = 360.0 / width;
 	let colStart = 380.0; // bottom wavelength for wavelength to RGB function
 	
@@ -83,7 +88,8 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 		
 
 		//ctx.fillRect(i, wallTop, 1, wallHeight);
-		let strip = ctx.createImageData(1, dispHeight);
+		//let strip = ctx.createImageData(1, dispHeight);
+		//for (j = 0; j < dispHeight)
 		let samplingInc = TEX_SIDE / wallHeight;
 
 		let texRowBytes = TEX_SIDE * 4; 

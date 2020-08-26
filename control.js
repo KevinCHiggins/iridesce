@@ -15,6 +15,8 @@ let fButton = document.getElementById('f');
 let bButton = document.getElementById('b');
 let tlButton = document.getElementById('tl');
 let trButton = document.getElementById('tr');
+let renButton = document.getElementById('ren');
+let perspButton = document.getElementById('persp');
 lButton.onmousedown = function(){
 	leftPressed = true;
 };
@@ -33,7 +35,12 @@ fButton.onmousedown = function(){
 bButton.onmousedown = function(){
 	downPressed = true;
 };
-
+renButton.onclick = function(){
+	iridesce = !iridesce;
+};
+perspButton.onclick= function(){
+	render2D = !render2D;	
+};
 lButton.onmouseup = function(){
 	leftPressed = false;
 };
@@ -51,6 +58,7 @@ fButton.onmouseup = function(){
 };
 bButton.onmouseup = function(){
 	downPressed = false;
+
 };
 onkeydown = function d(evt) {
 

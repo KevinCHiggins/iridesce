@@ -26,7 +26,7 @@ import {blocks} from "./buildmap.js";
 let c = document.getElementById("c");
 const WIDTH = 400;
 const HEIGHT = 300;
-const FOV= Math.PI / 2;
+const FOV= Math.PI / 2.5;
 
 
 let lineOrig = new Point(0, 0);

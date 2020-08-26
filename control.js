@@ -6,6 +6,52 @@ export let upPressed = false;
 export let downPressed = false;
 export let render2D = false;
 export let iridesce = false;
+
+// set up the buttons in module's first run
+// would be nice to do a check for device, actually
+let lButton = document.getElementById('l');
+let rButton = document.getElementById('r');
+let fButton = document.getElementById('f');
+let bButton = document.getElementById('b');
+let tlButton = document.getElementById('tl');
+let trButton = document.getElementById('tr');
+lButton.onmousedown = function(){
+	leftPressed = true;
+};
+rButton.onmousedown = function(){
+	rightPressed = true;
+};
+tlButton.onmousedown = function(){
+	turnLeftPressed = true;
+};
+trButton.onmousedown = function(){
+	turnRightPressed = true;
+}
+fButton.onmousedown = function(){
+	upPressed = true;
+};
+bButton.onmousedown = function(){
+	downPressed = true;
+};
+
+lButton.onmouseup = function(){
+	leftPressed = false;
+};
+rButton.onmouseup = function(){
+	rightPressed = false;
+};
+tlButton.onmouseup = function(){
+	turnLeftPressed = false;
+};
+trButton.onmouseup = function(){
+	turnRightPressed = false;
+};
+fButton.onmouseup = function(){
+	upPressed = false;
+};
+bButton.onmouseup = function(){
+	downPressed = false;
+};
 onkeydown = function d(evt) {
 
 	let code = evt.keyCode;

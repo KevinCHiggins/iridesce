@@ -4,16 +4,31 @@
 		<link href="https://fonts.googleapis.com/css?family=Aleo:300&display=swap" rel="stylesheet" />
 		<style>
 			p {font-family: 'Aleo', serif;}
+			div {text-align: center;}
 		</style>
 	</head>
 	<body>
+		<div>
+			<img id="iridmap" hidden src="./jesusmap.png"></img>
+			<img id="texture" hidden src="./jesus.png"></img>
+			<canvas id="c" width="400" height="300" style="border:1px solid #000000;">
+			</canvas>
+		</div>
+		<div>
+			<p>Use W, S, A, D to move, Z and C to turn, and X and I to switch render modes.
+			</p>
+		</div>
+		<div>
+			<button id="f">Forward</button><br>
+			<button id="l">Strafe left</button>
+			<button id="r">Strafe right</button><br>
 
-		<img id="iridmap" hidden src="./jesusmap.png"></img>
-		<img id="texture" hidden src="./jesus.png"></img>
-		<canvas id="c" width="400" height="300" style="border:1px solid #000000;">
-		</canvas>
-		<p>Use W, S, A, D to move, Z and C to turn, and X and I to switch render modes.
-		</p>
+			<button id="b">Back</button><br>
+
+			<button id="tl">Turn left</button>
+			<button id="tr">Turn right</button>
+
+		</div>
 		<script src="main.js" type="module"> 
 		</script>
 	</body>

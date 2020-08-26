@@ -6,6 +6,7 @@ buildColArr();
 //import {Point} from "./point.js";
 const SCALE_2D = 10; // how big in pixels each block/unit should be in 2D view
 const TEX_SIDE = 64;
+let texRowBytes = TEX_SIDE * 4; // COULD BE CONST
 const TEST_COL_OBJ = lightColObj(560);
 const CIRC = Math.PI * 2;
 const HALF_CIRC = Math.PI;
@@ -48,6 +49,9 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 	
 	ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 	ctx.fillRect(0, 0, width, height);
+	let box = ctx.getImageData(0, 0, width, height); // a buffer to hold everything we'll render in this frame
+	let boxHorizPosBytes = 0;
+	let boxWidthBytes = width * 4;
 	//let stripsCount = 0;
 
 	for (let i = 0; i < points.length; i++) {
@@ -86,12 +90,13 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 		}
 		let wallTop = (height - dispHeight) / 2;
 		
-
+		let wallTopBytesOffset = Math.floor(wallTop) * boxWidthBytes;
+		let wallEndBytesOffset = wallTopBytesOffset + dispHeight * boxWidthBytes;
 		//ctx.fillRect(i, wallTop, 1, wallHeight);
-		let strip = ctx.createImageData(1, dispHeight);
+		//let strip = ctx.createImageData(1, dispHeight);
 		let samplingInc = TEX_SIDE / wallHeight;
 
-		let texRowBytes = TEX_SIDE * 4; 
+
 		//horizHitPos = 63;
 		// start the sampling at the appropriate spot - if we are close to a wall
 		// and dispHeight is smaller than wallHeight, we need to shift this down to a spot further down
@@ -101,7 +106,9 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 		//let horizSamplePos = horizHitPos * TEX_SIDE * 4;
 		// this loop only goes to dispHeight because we don't care about data that won't be on the screen (top and bottom of a close wall)
 		if (iridesce) {
-			for (let j = 0; j < dispHeight * 4; j += 4) {
+
+			
+			for (let j = wallTopBytesOffset + boxHorizPosBytes; j < wallEndBytesOffset; j += boxWidthBytes) {
 				//let k = j * 4;
 				// nearest-neighbour sampling
 				let texPos = Math.floor(samplePos) * texRowBytes + horizTexPos;
@@ -112,16 +119,17 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 				let iridCol = lightColObj(Math.floor(380 + inc * 100));
 
 				
-				strip.data[j] = lerp(texData.data[texPos], iridCol.red, irid);
-				strip.data[j +1] = lerp(texData.data[texPos + 1], iridCol.green, irid);
-				strip.data[j +2 ] = lerp(texData.data[texPos + 2],  iridCol.blue, irid);
+				box.data[j ] = lerp(texData.data[texPos], iridCol.red, irid);
+				box.data[j +1] = lerp(texData.data[texPos + 1], iridCol.green, irid);
+				box.data[j +2 ] = lerp(texData.data[texPos + 2],  iridCol.blue, irid);
 
-				strip.data[j + 3] = 255;
+				box.data[j + 3] = 255;
 			}
+			
 
 		}
 		else {
-			for (let j = 0; j < dispHeight; j++) {
+			for (let j = wallTopBytesOffset + boxHorizPosBytes; j < wallEndBytesOffset; j += boxWidthBytes) {
 				// nearest-neighbour sampling
 				let pos = Math.floor(samplePos);
 				samplePos += samplingInc;
@@ -130,24 +138,25 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 					//console.log("Distcol " + distCol + ", dist " + dist);
 			
 
-				strip.data[j * 4] = distCol.red;
-				strip.data[j * 4 +1] = distCol.green;
-				strip.data[j * 4 +2] = distCol.blue;
+				box.data[j] = distCol.red;
+				box.data[j +1] = distCol.green;
+				box.data[j +2] = distCol.blue;
 
-				strip.data[(j * 4) + 3] = 255;
+				box.data[j + 3] = 255;
 			}
 
 			
 		}
 
 
-		ctx.putImageData(strip, i, wallTop);
+		
 
 
 
+	boxHorizPosBytes += 4;
 
 	}
-	
+	ctx.putImageData(box, 0, 0);
 
 }
 

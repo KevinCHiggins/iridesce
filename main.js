@@ -45,7 +45,7 @@ let previousTimestamp = 0;
 
 let viewAngs = getViewPlaneAngles();//getViewArcPoints(0, play).angs;//getViewPlaneAngles();
 function gameLoop(timestamp) {
-	console.log(timestamp - previousTimestamp);
+	//console.log(timestamp - previousTimestamp);
 	previousTimestamp = timestamp;
 	if (rightPressed && leftPressed) {
 		//console.log("RL");

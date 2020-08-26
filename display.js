@@ -13,7 +13,7 @@ const QUART_CIRC = Math.PI / 2;
 const THREE_QUART_CIRC = HALF_CIRC + QUART_CIRC;
 var width;
 var height;
-var strip; // strip of graphics data 1px wide i.e. a buffer, used for drawing walls
+var workStrip;
 let offscreen = new OffscreenCanvas(TEX_SIDE * 2, TEX_SIDE * 2);
 let offscreenCtx = offscreen.getContext('2d');
 
@@ -39,7 +39,6 @@ export function makeTextures() {
 export function setup(ctx) {
 	width = ctx.canvas.style.width.substring(0, ctx.canvas.style.width.length - 2);
 	height = ctx.canvas.style.height.substring(0, ctx.canvas.style.height.length - 2);
-	strip = ctx.createImageData(1, height);
 }
 //offscreenCtx.drawImage(map, 64, 0);
 export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) {
@@ -61,6 +60,7 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 		let horizHitPos = hit.vertEdge? (hit.hitPoint.y * 2) % 1: (hit.hitPoint.x * 2) % 1;
 
 		horizHitPos = Math.floor(horizHitPos * TEX_SIDE);
+		let horizTexPos = horizHitPos * 4;
 		//console.log("Horiz " + horizHitPos);
 		//console.log("ang ")
 
@@ -88,8 +88,7 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 		
 
 		//ctx.fillRect(i, wallTop, 1, wallHeight);
-		//let strip = ctx.createImageData(1, dispHeight);
-		//for (j = 0; j < dispHeight)
+		let strip = ctx.createImageData(1, dispHeight);
 		let samplingInc = TEX_SIDE / wallHeight;
 
 		let texRowBytes = TEX_SIDE * 4; 
@@ -102,22 +101,22 @@ export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) 
 		//let horizSamplePos = horizHitPos * TEX_SIDE * 4;
 		// this loop only goes to dispHeight because we don't care about data that won't be on the screen (top and bottom of a close wall)
 		if (iridesce) {
-			for (let j = 0; j < dispHeight; j++) {
+			for (let j = 0; j < dispHeight * 4; j += 4) {
+				//let k = j * 4;
 				// nearest-neighbour sampling
-				let pos = Math.floor(samplePos);
+				let texPos = Math.floor(samplePos) * texRowBytes + horizTexPos;
+
+				let irid = ((mapData.data[texPos]) / 512.0) * (1.5 * inc - (inc * inc)); // red value is enough as we assume map is greySCALE_2D
 				samplePos += samplingInc;
-				let irid = ((mapData.data[pos * texRowBytes + horizHitPos * 4]) / 512.0) * (1.5 * inc - (inc * inc)); // red value is enough as we assume map is greySCALE_2D
-		
 
 				let iridCol = lightColObj(Math.floor(380 + inc * 100));
 
 				
+				strip.data[j] = lerp(texData.data[texPos], iridCol.red, irid);
+				strip.data[j +1] = lerp(texData.data[texPos + 1], iridCol.green, irid);
+				strip.data[j +2 ] = lerp(texData.data[texPos + 2],  iridCol.blue, irid);
 
-				strip.data[j * 4] = lerp(texData.data[pos * texRowBytes + horizHitPos * 4], iridCol.red, irid);
-				strip.data[j * 4 +1] = lerp(texData.data[pos * texRowBytes + horizHitPos * 4 + 1], iridCol.green, irid);
-				strip.data[j * 4 +2] = lerp(texData.data[pos * texRowBytes + horizHitPos * 4 + 2],  iridCol.blue, irid);
-
-				strip.data[(j * 4) + 3] = 255;
+				strip.data[j + 3] = 255;
 			}
 
 		}

@@ -15,8 +15,7 @@ const THREE_QUART_CIRC = HALF_CIRC + QUART_CIRC;
 var width;
 var height;
 var workStrip;
-let offscreen = new OffscreenCanvas(TEX_SIDE * 2, TEX_SIDE * 2);
-let offscreenCtx = offscreen.getContext('2d');
+
 
 var tex; 
 var map;
@@ -28,20 +27,23 @@ var mapData;
 // a quick solution to the need to wait for images to load before this runs
 // I call this in the whole document's onload event
 export function makeTextures() {
-		
+	let invis = document.createElement('canvas');
+	invis.width = TEX_SIDE * 2;
+	invis.height = TEX_SIDE * 2;
+	let invisCtx = invis.getContext('2d');
 	tex = document.getElementById('texture');
-	offscreenCtx.drawImage(tex, 0, 0);
-	texData = offscreenCtx.getImageData(0, 0, TEX_SIDE, TEX_SIDE);
+	invisCtx.drawImage(tex, 0, 0);
+	texData = invisCtx.getImageData(0, 0, TEX_SIDE, TEX_SIDE);
 	map = document.getElementById('iridmap');
-	offscreenCtx.drawImage(map, 0, 0);
-	mapData = offscreenCtx.getImageData(0, 0, TEX_SIDE, TEX_SIDE);
+	invisCtx.drawImage(map, 0, 0);
+	mapData = invisCtx.getImageData(0, 0, TEX_SIDE, TEX_SIDE);
 
 }
 export function setup(ctx) {
 	width = ctx.canvas.style.width.substring(0, ctx.canvas.style.width.length - 2);
 	height = ctx.canvas.style.height.substring(0, ctx.canvas.style.height.length - 2);
 }
-//offscreenCtx.drawImage(map, 64, 0);
+//invisCtx.drawImage(map, 64, 0);
 export function display3D(ctx, points, blocks, play, theta, viewAngs, iridesce) {
 
 	let colScale = 360.0 / width;
